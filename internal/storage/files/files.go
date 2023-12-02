@@ -1,7 +1,7 @@
 package files
 
 import (
-	"encoding/gob"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -44,7 +44,7 @@ func (s *Storage) Save(page *storage.Page) error {
 	}
 	defer file.Close()
 
-	if err := gob.NewEncoder(file).Encode(page); err != nil {
+	if err := json.NewEncoder(file).Encode(page); err != nil {
 		return fmt.Errorf("can't save page: %w", err)
 	}
 
@@ -52,6 +52,7 @@ func (s *Storage) Save(page *storage.Page) error {
 }
 
 func (s *Storage) PickRandom(userName string) (*storage.Page, error) {
+	// TODO: если папки нет
 	fPath := filepath.Join(s.basePath, userName)
 	files, err := os.ReadDir(fPath)
 	if err != nil {
@@ -107,7 +108,8 @@ func (s *Storage) decodePage(filePath string) (*storage.Page, error) {
 	defer file.Close()
 
 	var p storage.Page
-	if err := gob.NewDecoder(file).Decode(&p); err != nil {
+
+	if err := json.NewDecoder(file).Decode(&p); err != nil {
 		return nil, fmt.Errorf("can't decode page: %w", err)
 	}
 	return &p, nil

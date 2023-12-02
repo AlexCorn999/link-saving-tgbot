@@ -1,10 +1,9 @@
 package storage
 
 import (
-	"crypto/sha256"
+	"crypto/sha1"
 	"errors"
 	"fmt"
-	"io"
 )
 
 var ErrorNoSavedPages = errors.New("no saved pages")
@@ -22,14 +21,11 @@ type Page struct {
 }
 
 func (p *Page) Hash() (string, error) {
-	h := sha256.New()
-	if _, err := io.WriteString(h, p.URL); err != nil {
+	hash := sha1.New()
+
+	if _, err := hash.Write([]byte(p.URL)); err != nil {
 		return "", fmt.Errorf("can't calculate hash: %w", err)
 	}
 
-	if _, err := io.WriteString(h, p.UserName); err != nil {
-		return "", fmt.Errorf("can't calculate hash: %w", err)
-	}
-
-	return string(h.Sum(nil)), nil
+	return fmt.Sprintf("%x", hash.Sum([]byte(p.UserName))), nil
 }
