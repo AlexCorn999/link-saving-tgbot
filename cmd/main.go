@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	tgClient "github.com/AlexCorn999/link-saving-tgbot/internal/clients/telegram"
@@ -8,7 +9,7 @@ import (
 	event_consumer "github.com/AlexCorn999/link-saving-tgbot/internal/consumer/event-consumer"
 	"github.com/AlexCorn999/link-saving-tgbot/internal/events/telegram"
 
-	"github.com/AlexCorn999/link-saving-tgbot/internal/storage/files"
+	"github.com/AlexCorn999/link-saving-tgbot/internal/storage/sqlite"
 )
 
 const (
@@ -21,8 +22,17 @@ func main() {
 		log.Fatal(err)
 	}
 
+	store, err := sqlite.NewStorage(config.SqlitePath)
+	if err != nil {
+		log.Fatal("can't connect to storage:", err)
+	}
+
+	if err := store.Init(context.Background()); err != nil {
+		log.Fatal("can't init storage")
+	}
+
 	eventsProcessor := telegram.NewProcessor(tgClient.NewClient(tgBotHost, config),
-		files.NewStorage(config.StoragePath))
+		store)
 
 	log.Println("server started")
 
