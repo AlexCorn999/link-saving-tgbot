@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/AlexCorn999/link-saving-tgbot/internal/clients"
 	"github.com/AlexCorn999/link-saving-tgbot/internal/clients/telegram"
 	"github.com/AlexCorn999/link-saving-tgbot/internal/events"
 	"github.com/AlexCorn999/link-saving-tgbot/internal/storage"
@@ -79,7 +78,7 @@ func meta(event events.Event) (Meta, error) {
 	return res, nil
 }
 
-func event(upd clients.Update) events.Event {
+func event(upd telegram.Update) events.Event {
 	updType := fetchType(upd)
 	res := events.Event{
 		Type: updType,
@@ -96,14 +95,14 @@ func event(upd clients.Update) events.Event {
 	return res
 }
 
-func fetchText(upd clients.Update) string {
+func fetchText(upd telegram.Update) string {
 	if upd.Message == nil {
 		return ""
 	}
 	return upd.Message.Text
 }
 
-func fetchType(upd clients.Update) events.Type {
+func fetchType(upd telegram.Update) events.Type {
 	if upd.Message == nil {
 		return events.Unknown
 	}

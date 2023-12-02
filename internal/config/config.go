@@ -6,7 +6,8 @@ import (
 )
 
 type Config struct {
-	Token string
+	Token       string
+	StoragePath string
 }
 
 func NewConfig() *Config {
@@ -14,11 +15,16 @@ func NewConfig() *Config {
 }
 
 func (c *Config) MustToken() error {
-	c.Token = *flag.String("token-bot-token",
+	token := flag.String("tgToken",
 		"",
 		"token for access to telegram bot")
-
+	storagePath := flag.String("storage-path",
+		"files_storage",
+		"file path for storage")
 	flag.Parse()
+
+	c.Token = *token
+	c.StoragePath = *storagePath
 
 	if c.Token == "" {
 		return errors.New("token is not specified")

@@ -9,7 +9,6 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/AlexCorn999/link-saving-tgbot/internal/clients"
 	"github.com/AlexCorn999/link-saving-tgbot/internal/config"
 )
 
@@ -31,7 +30,7 @@ func newBasePath(token string) string {
 	return "bot" + token
 }
 
-func (c *Client) Updates(offset, limit int) ([]clients.Update, error) {
+func (c *Client) Updates(offset, limit int) ([]Update, error) {
 	q := url.Values{}
 	q.Add("offset", strconv.Itoa(offset))
 	q.Add("limit", strconv.Itoa(limit))
@@ -41,7 +40,7 @@ func (c *Client) Updates(offset, limit int) ([]clients.Update, error) {
 		return nil, err
 	}
 
-	var res clients.UpdatesResponse
+	var res UpdatesResponse
 	if err := json.Unmarshal(data, &res); err != nil {
 		return nil, err
 	}

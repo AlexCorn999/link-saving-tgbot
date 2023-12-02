@@ -3,8 +3,12 @@ package main
 import (
 	"log"
 
-	"github.com/AlexCorn999/link-saving-tgbot/internal/clients/telegram"
+	tgClient "github.com/AlexCorn999/link-saving-tgbot/internal/clients/telegram"
 	"github.com/AlexCorn999/link-saving-tgbot/internal/config"
+	event_consumer "github.com/AlexCorn999/link-saving-tgbot/internal/consumer/event-consumer"
+	"github.com/AlexCorn999/link-saving-tgbot/internal/events/telegram"
+
+	"github.com/AlexCorn999/link-saving-tgbot/internal/storage/files"
 )
 
 const (
@@ -17,8 +21,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tgClient := telegram.NewClient(tgBotHost, config)
-	//fetcher := fetcher.New()
-	//processor := telegram.NewProcessor()
-	//consumer.Start(fetcher,processor)
+	eventsProcessor := telegram.NewProcessor(tgClient.NewClient(tgBotHost, config),
+		files.NewStorage(config.StoragePath))
+
+	log.Println("server started")
+
+	consumer := event_consumer.NewConsumer(eventsProcessor, eventsProcessor, 100)
+	if err := consumer.Start(); err != nil {
+		log.Fatal(err)
+	}
 }
