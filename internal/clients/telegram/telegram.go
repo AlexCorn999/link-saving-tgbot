@@ -9,8 +9,8 @@ import (
 	"path"
 	"strconv"
 
+	"github.com/AlexCorn999/link-saving-tgbot/internal/clients"
 	"github.com/AlexCorn999/link-saving-tgbot/internal/config"
-	"github.com/AlexCorn999/link-saving-tgbot/internal/domain"
 )
 
 type Client struct {
@@ -31,7 +31,7 @@ func newBasePath(token string) string {
 	return "bot" + token
 }
 
-func (c *Client) Updates(offset, limit int) ([]domain.Update, error) {
+func (c *Client) Updates(offset, limit int) ([]clients.Update, error) {
 	q := url.Values{}
 	q.Add("offset", strconv.Itoa(offset))
 	q.Add("limit", strconv.Itoa(limit))
@@ -41,7 +41,7 @@ func (c *Client) Updates(offset, limit int) ([]domain.Update, error) {
 		return nil, err
 	}
 
-	var res domain.UpdatesResponse
+	var res clients.UpdatesResponse
 	if err := json.Unmarshal(data, &res); err != nil {
 		return nil, err
 	}
