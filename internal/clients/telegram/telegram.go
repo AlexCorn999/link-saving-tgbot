@@ -21,15 +21,17 @@ type Client struct {
 func NewClient(host string, config *config.Config) *Client {
 	return &Client{
 		host:     host,
-		basePath: newBasePath(config.Token),
+		basePath: newBasePath(config.TgToken),
 		client:   http.Client{},
 	}
 }
 
+// newBasePath generates the path for the Telegram request.
 func newBasePath(token string) string {
 	return "bot" + token
 }
 
+// Updates gets a list of updates from Telegram.
 func (c *Client) Updates(offset, limit int) ([]Update, error) {
 	q := url.Values{}
 	q.Add("offset", strconv.Itoa(offset))
@@ -42,12 +44,13 @@ func (c *Client) Updates(offset, limit int) ([]Update, error) {
 
 	var res UpdatesResponse
 	if err := json.Unmarshal(data, &res); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("can't get updates: %w", err)
 	}
 
 	return res.Result, nil
 }
 
+// SendMessage sends a message to Telegram.
 func (c *Client) SendMessage(chatID int, text string) error {
 	q := url.Values{}
 	q.Add("chat_id", strconv.Itoa(chatID))
@@ -59,6 +62,7 @@ func (c *Client) SendMessage(chatID int, text string) error {
 	return nil
 }
 
+// doRequest generates and sends a request to Telegram.
 func (c *Client) doRequest(method string, query url.Values) ([]byte, error) {
 	u := url.URL{
 		Scheme: "https",

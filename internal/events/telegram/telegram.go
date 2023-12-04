@@ -27,6 +27,7 @@ func NewProcessor(client *telegram.Client, storage storage.Storage) *Processor {
 	}
 }
 
+// Fetch receives updates and generates events.
 func (p *Processor) Fetch(limit int) ([]events.Event, error) {
 	updates, err := p.tg.Updates(p.offset, limit)
 	if err != nil {
@@ -48,6 +49,7 @@ func (p *Processor) Fetch(limit int) ([]events.Event, error) {
 	return res, nil
 }
 
+// Process passes events to processing.
 func (p *Processor) Process(event events.Event) error {
 	switch event.Type {
 	case events.Message:
@@ -57,6 +59,7 @@ func (p *Processor) Process(event events.Event) error {
 	}
 }
 
+// processMessage receives meta information from the event and sends it to the command handler.
 func (p *Processor) processMessage(event events.Event) error {
 	meta, err := meta(event)
 	if err != nil {
@@ -70,6 +73,7 @@ func (p *Processor) processMessage(event events.Event) error {
 	return nil
 }
 
+// meta gets meta information from the event.
 func meta(event events.Event) (Meta, error) {
 	res, ok := event.Meta.(Meta)
 	if !ok {
@@ -78,6 +82,7 @@ func meta(event events.Event) (Meta, error) {
 	return res, nil
 }
 
+// event translates information from update to event.
 func event(upd telegram.Update) events.Event {
 	updType := fetchType(upd)
 	res := events.Event{
@@ -95,6 +100,7 @@ func event(upd telegram.Update) events.Event {
 	return res
 }
 
+// fetchText gets the text from the updates.
 func fetchText(upd telegram.Update) string {
 	if upd.Message == nil {
 		return ""
@@ -102,6 +108,7 @@ func fetchText(upd telegram.Update) string {
 	return upd.Message.Text
 }
 
+// fetchType gets the type from the updates.
 func fetchType(upd telegram.Update) events.Type {
 	if upd.Message == nil {
 		return events.Unknown

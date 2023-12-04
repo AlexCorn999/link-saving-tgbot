@@ -15,6 +15,7 @@ type Storage struct {
 	db *sql.DB
 }
 
+// Init initializes a table in the database if it has not been created.
 func (s *Storage) Init(ctx context.Context) error {
 	if _, err := s.db.ExecContext(ctx,
 		"CREATE TABLE IF NOT EXISTS pages (url TEXT, user_name TEXT)"); err != nil {
@@ -38,6 +39,7 @@ func NewStorage(path string) (*Storage, error) {
 	}, nil
 }
 
+// Save adds the link to the user's repository.
 func (s *Storage) Save(ctx context.Context, p *storage.Page) error {
 	if _, err := s.db.ExecContext(ctx, "INSERT INTO pages (url, user_name) VALUES (?, ?)",
 		p.URL,
@@ -47,6 +49,7 @@ func (s *Storage) Save(ctx context.Context, p *storage.Page) error {
 	return nil
 }
 
+// PickRandom takes a random link from the user's storage.
 func (s *Storage) PickRandom(ctx context.Context, userName string) (*storage.Page, error) {
 	var url string
 	if err := s.db.QueryRowContext(ctx, "SELECT url FROM pages WHERE user_name = ? ORDER BY RANDOM() LIMIT 1",
@@ -64,6 +67,7 @@ func (s *Storage) PickRandom(ctx context.Context, userName string) (*storage.Pag
 	}, nil
 }
 
+// Remove deletes the link from the user's storage.
 func (s *Storage) Remove(ctx context.Context, p *storage.Page) error {
 	if _, err := s.db.ExecContext(ctx, "DELETE FROM pages WHERE url = ? AND user_name = ?",
 		p.URL,
@@ -72,6 +76,8 @@ func (s *Storage) Remove(ctx context.Context, p *storage.Page) error {
 	}
 	return nil
 }
+
+// IsExists checks if a link exists in the user's storage.
 func (s *Storage) IsExists(ctx context.Context, p *storage.Page) (bool, error) {
 	var count int
 	if err := s.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM pages WHERE url = ? AND user_name = ?",

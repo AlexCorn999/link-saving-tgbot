@@ -21,6 +21,7 @@ type Page struct {
 	UserName string
 }
 
+// Hash hashes the link and user data.
 func (p *Page) Hash() (string, error) {
 	hash := sha1.New()
 
