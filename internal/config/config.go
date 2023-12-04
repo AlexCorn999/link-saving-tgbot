@@ -6,32 +6,33 @@ import (
 )
 
 type Config struct {
-	Token           string
-	FileStoragePath string
-	SqlitePath      string
+	TgToken    string
+	FilePath   string
+	SqlitePath string
 }
 
 func NewConfig() *Config {
 	return &Config{}
 }
 
-func (c *Config) MustToken() error {
+// ParseFlags parses the token for Telegram, the path for the filesystem, and the path for the sqlite database.
+func (c *Config) ParseFlags() error {
 	token := flag.String("tgToken",
 		"",
 		"token for access to telegram bot")
-	fileStoragePath := flag.String("storage-path",
-		"files_storage",
-		"file path for storage")
+	fileStoragePath := flag.String("file",
+		"data/files",
+		"path for file storage")
 	sqlitePath := flag.String("sqlite",
 		"data/sqlite/storage.db",
-		"path for storage")
+		"path for sqlite storage")
 	flag.Parse()
 
-	c.Token = *token
-	c.FileStoragePath = *fileStoragePath
+	c.TgToken = *token
+	c.FilePath = *fileStoragePath
 	c.SqlitePath = *sqlitePath
 
-	if c.Token == "" {
+	if c.TgToken == "" {
 		return errors.New("token is not specified")
 	}
 	return nil

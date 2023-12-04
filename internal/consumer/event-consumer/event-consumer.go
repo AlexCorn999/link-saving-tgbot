@@ -21,6 +21,7 @@ func NewConsumer(fetcher events.Fetcher, processor events.Processor, batchSize i
 	}
 }
 
+// Start starts the bot process.
 func (c *Consumer) Start() error {
 	for {
 		gotEvents, err := c.fetcher.Fetch(c.batchSize)
@@ -41,6 +42,7 @@ func (c *Consumer) Start() error {
 	}
 }
 
+// handleEvents passes events to processing.
 func (c *Consumer) handleEvents(events []events.Event) error {
 	for _, e := range events {
 		log.Printf("got new event: %s", e.Text)

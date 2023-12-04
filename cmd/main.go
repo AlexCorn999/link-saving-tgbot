@@ -8,7 +8,6 @@ import (
 	"github.com/AlexCorn999/link-saving-tgbot/internal/config"
 	event_consumer "github.com/AlexCorn999/link-saving-tgbot/internal/consumer/event-consumer"
 	"github.com/AlexCorn999/link-saving-tgbot/internal/events/telegram"
-
 	"github.com/AlexCorn999/link-saving-tgbot/internal/storage/sqlite"
 )
 
@@ -18,9 +17,11 @@ const (
 
 func main() {
 	config := config.NewConfig()
-	if err := config.MustToken(); err != nil {
+	if err := config.ParseFlags(); err != nil {
 		log.Fatal(err)
 	}
+
+	//store := files.NewStorage(config.FilePath)
 
 	store, err := sqlite.NewStorage(config.SqlitePath)
 	if err != nil {
