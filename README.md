@@ -14,8 +14,5 @@ go get github.com/AlexCorn999/link-saving-tgbot
 
 # examples
 
-<img src="https://github.com/AlexCorn999/link-saving-tgbot/blob/main/images/start.jpg" width="200" height="397">
-<img src="https://github.com/AlexCorn999/link-saving-tgbot/blob/main/images/help.jpg" width="200" height="133">
-<img src="https://github.com/AlexCorn999/link-saving-tgbot/blob/main/images/save.jpg" width="200" height="278">
-<img src="https://github.com/AlexCorn999/link-saving-tgbot/blob/main/images/rnd.jpg" width="200" height="303">
+<img src="https://github.com/AlexCorn999/link-saving-tgbot/blob/main/images/start.jpg" width="200" height="397"><img src="https://github.com/AlexCorn999/link-saving-tgbot/blob/main/images/help.jpg" width="200" height="133"><img src="https://github.com/AlexCorn999/link-saving-tgbot/blob/main/images/save.jpg" width="200" height="278"><img src="https://github.com/AlexCorn999/link-saving-tgbot/blob/main/images/rnd.jpg" width="200" height="303">
 ___
